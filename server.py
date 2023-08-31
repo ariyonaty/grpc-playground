@@ -30,6 +30,15 @@ class Rides(rpc.RidesServicer):
         ride_id = new_ride_id()
         return pb.StartResponse(id=ride_id)
 
+    def Track(self, request_interator, context):
+        count = 0
+        for request in request_interator:
+            # TODO: store in DB
+            log.info(f'track: {request}')
+            count += 1
+
+        return pb.TrackResponse(count=count)
+
 
 if __name__ == '__main__':
     import config
