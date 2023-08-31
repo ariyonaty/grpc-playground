@@ -62,6 +62,20 @@ def load_credentials():
     return grpc.ssl_server_credentials([(key, cert)])
 
 
+def build_server(port):
+    server = grpc.server(ThreadPoolExecutor())
+    rpc.add_RidesServicer_to_server(Rides(), server)
+
+    names = (
+        pb.DESCRIPTOR.services_by_name['Rides'].full_name,
+        reflection.SERVICE_NAME,
+    )
+    reflection.enable_server_reflection(names, server)
+    addr = f'[::]:{port}'
+    server.add_insecure_port(addr)
+    return server
+
+
 if __name__ == '__main__':
     import config
 
